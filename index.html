@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="./src/output.css" />
+    <title>Github Random Api</title>
+  </head>
+  <body>
+    <header class="mx-auto text-center">
+      <i class="fa fa-brands fa-github fa-lg fa-fw"></i>GITHUB
+    </header>
+    <main class="flex flex-col items-center h-screen mt-5">
+      <div class="w-[50%]">
+        <select
+          class="border border-gray-400 p-2 rounded-2xl"
+          name="language"
+          id="language"
+        >
+          <option value="">Select</option>
+        </select>
+        <p class="text-center hidden" id="loading">Loading...</p>
+
+        <div
+          class="w-full mt-4 h-auto p-3 flex flex-col gap-3 rounded-xl bg-red-200"
+          id="container"
+        >
+          <p>Please select a language</p>
+        </div>
+      </div>
+    </main>
+
+    <script src="./index.js"></script>
+  </body>
+</html>

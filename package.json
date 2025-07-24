@@ -1,0 +1,16 @@
+{
+  "name": "cls",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "Khushi",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "watch": "tailwindcss -i ./src/input.css -o ./src/output.css --watch"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.11",
+    "tailwindcss": "^4.1.11"
+  }
+}
