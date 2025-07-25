@@ -6,6 +6,8 @@ const languagesUrl =
   'https://raw.githubusercontent.com/kamranahmedse/githunt/master/src/components/filters/language-filter/languages.json';
 
 const languageSelect = document.getElementById('language');
+const actionButton = document.getElementById('actionButton');
+let previousRepoId = null;
 
 if (languageSelect.value === '') {
   console.log('Language select element not found');
@@ -26,29 +28,65 @@ const loadLanguages = async () => {
 const loadRepositories = async (language) => {
   loading.classList.remove('hidden');
   container.innerHTML = '';
-
   container.style.display = 'none';
+  actionButton.classList.add('hidden');
 
   try {
     const apiUrl = `https://api.github.com/search/repositories?q=language:${language}&sort=stars`;
     const response = await fetch(apiUrl);
     const data = await response.json();
 
-    const randomRepo =
-      data.items[Math.floor(Math.random() * data.items.length)];
+    if (!data.items || data.items.length === 0) {
+      showRetry(language);
+      loading.classList.add('hidden');
+      return;
+    }
 
-    // Simulate a delay before showing the result (e.g., 1 second)
+    let filteredItems = data.items;
+    if (previousRepoId !== null && data.items.length > 1) {
+      filteredItems = data.items.filter((item) => item.id !== previousRepoId);
+    }
+
+    const randomRepo =
+      filteredItems[Math.floor(Math.random() * filteredItems.length)];
+    previousRepoId = randomRepo?.id || null;
+
     setTimeout(() => {
-      displayRepository(randomRepo);
+      if (randomRepo) {
+        displayRepository(randomRepo);
+
+        container.className =
+          'w-full mt-4 h-auto p-3 flex flex-col gap-3 rounded-xl bg-gray-200';
+
+        actionButton.textContent = 'Refresh';
+        actionButton.className = 'px-4 py-2 mt-4 rounded text-white bg-black';
+        actionButton.classList.remove('hidden');
+        actionButton.onclick = () => loadRepositories(language);
+      } else {
+        showRetry(language);
+      }
+
       loading.classList.add('hidden');
       container.style.display = 'flex';
-    }, 1000); // 1000ms = 1 second
+    }, 1000);
   } catch (error) {
-    container.innerHTML =
-      '<p class="text-red-500">Error loading repositories.</p>';
+    showRetry(language);
     loading.classList.add('hidden');
     console.error('Failed to load repositories:', error);
   }
+};
+
+const showRetry = (language) => {
+  container.innerHTML =
+    '<p class="text-red-700 text-lg">No repository found.</p>';
+  container.className =
+    'w-full mt-4 h-auto p-3 flex flex-col gap-3 rounded-xl bg-red-300';
+
+  actionButton.textContent = 'Retry';
+  actionButton.className = 'px-4 py-2 mt-4 rounded text-white bg-red-600';
+  actionButton.classList.remove('hidden');
+
+  actionButton.onclick = () => loadRepositories(language);
 };
 
 const displayRepository = (repo) => {
@@ -56,7 +94,7 @@ const displayRepository = (repo) => {
 
   const repoContainer = document.createElement('div');
   repoContainer.className =
-    'w-[50%] mt-4 h-auto p-3 flex flex-col gap-3 rounded-xl bg-red-200';
+    'w-[100%] mt-4 h-auto p-3 flex flex-col gap-3 rounded-xl';
 
   const html = `
 
