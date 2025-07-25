@@ -50,7 +50,7 @@ const loadRepositories = async (language) => {
     const randomRepo =
       filteredItems[Math.floor(Math.random() * filteredItems.length)];
     previousRepoId = randomRepo?.id || null;
-
+    console.log(randomRepo);
     setTimeout(() => {
       if (randomRepo) {
         displayRepository(randomRepo);
